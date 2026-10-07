@@ -1,16 +1,23 @@
 package me.aboulfalah.khadija.ebankservice.entities;
 
-import jakarta.persistence.*;
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import me.aboulfalah.khadija.ebankservice.model.Customer;
+import org.springframework.data.domain.Persistable;
 
 import java.util.Date;
 
-import org.springframework.data.domain.Persistable;
-import jakarta.persistence.Transient;
-
 @Entity
-@Data @NoArgsConstructor @AllArgsConstructor @Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class BankAccount implements Persistable<String> {
 
     @Id
@@ -23,12 +30,11 @@ public class BankAccount implements Persistable<String> {
     @Transient
     private Customer customer;
 
-    @Transient
-    @Builder.Default
-    private boolean isNew = true;
-
     @Override
+    @JsonIgnore
     public boolean isNew() {
-        return isNew || id == null;
+        // Comme vous faites bankAccount.setCreatedAt(new Date()) dans le service,
+        // à l'arrivée depuis Swagger createdAt est null, ce qui garantit qu'il sera persisté sans NullPointerException.
+        return this.createdAt == null;
     }
 }
