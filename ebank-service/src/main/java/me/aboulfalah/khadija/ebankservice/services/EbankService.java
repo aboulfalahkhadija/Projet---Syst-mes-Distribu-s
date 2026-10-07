@@ -1,6 +1,7 @@
 package me.aboulfalah.khadija.ebankservice.services;
 
 import me.aboulfalah.khadija.ebankservice.entities.BankAccount;
+import me.aboulfalah.khadija.ebankservice.feign.CustomerRestClient;
 import me.aboulfalah.khadija.ebankservice.repository.BankAccountRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +12,11 @@ import java.util.UUID;
 @Service
 public class EbankService {
     private final BankAccountRepository accountRepository;
+    private CustomerRestClient customerRestClient;
 
     public EbankService(BankAccountRepository accountRepository) {
         this.accountRepository = accountRepository;
+        this.customerRestClient = customerRestClient;
     }
 
     public List<BankAccount> getAllBankAccounts() {
@@ -22,8 +25,11 @@ public class EbankService {
 
     // ID passé en String pour correspondre à l'UUID généré
     public BankAccount getBankAccountById(String id) {
-        return accountRepository.findById(id)
+        BankAccount bankAccount = accountRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Account not found"));
+        bankAccount.setCustomer(customerRestClient
+                .getCustomerById(bankAccount.getCustomerId()));
+        return bankAccount;
     }
 
     public BankAccount save(BankAccount bankAccount) {
