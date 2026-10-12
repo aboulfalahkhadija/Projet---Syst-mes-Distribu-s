@@ -1,0 +1,36 @@
+<div class="p-3">
+  @if (accounts$ | async; as state) {
+  @if(state.status==RequestStatus.ERROR){
+  <div class="text-danger">
+    {{state.errorMessage}}
+  </div>
+
+  }
+  @else if(state.status==RequestStatus.SUCCESS){
+  <table class="table table-striped table-bordered mt-3">
+    <thead class="table-dark">
+    <tr>
+      <th>ID</th>
+      <th>Balance</th>
+      <th>Date</th>
+      <th>Type</th>
+      <th>CustomerId</th>
+    </tr>
+    </thead>
+    <tbody>
+    @for (acc of state.accounts; track acc) {
+    <tr>
+      <td>{{ acc.id }}</td>
+      <td>{{ acc.balance }}</td>
+      <td>{{ acc.createdAt }}</td>
+      <td>{{ acc.type }}</td>
+      <td>{{ acc.customerId }}</td>
+    </tr>
+    }
+    </tbody>
+  </table>
+
+  }
+
+}
+</div>
