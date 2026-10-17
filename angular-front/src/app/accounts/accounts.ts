@@ -4,7 +4,7 @@ import { AsyncPipe } from '@angular/common';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs';
 import { Account, AccountListState, RequestStatus } from '../model/account.model';
-
+import { LoadingService } from '../services/loading';
 @Component({
   selector: 'app-accounts',
   standalone: true,
@@ -14,6 +14,7 @@ import { Account, AccountListState, RequestStatus } from '../model/account.model
 })
 export class Accounts {
   private http = inject(HttpClient);
+  public loadService=inject(LoadingService);
 
   // Permet au template HTML d'utiliser RequestStatus.SUCCESS et RequestStatus.ERROR
   protected readonly RequestStatus = RequestStatus;

@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class CustomerService {
 
-    private static CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
 
     public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
@@ -30,7 +30,10 @@ public class CustomerService {
     }
 
     @McpTool(description = "Save new customer")
-    public static Customer saveCustomer(@McpToolParam(description = "The customer to save (name , email)") Customer customer) {
+    public Customer saveCustomer(@McpToolParam(description = "The customer to save (name , email)") Customer customer) {
+        if (customer.getId() != null && customer.getId() == 0L) {
+            customer.setId(null);
+        }
         return customerRepository.save(customer);
     }
 }
